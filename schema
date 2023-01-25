@@ -1,0 +1,103 @@
+-- -------------------------------------------------------------
+-- TablePlus 5.1.0(468)
+--
+-- https://tableplus.com/
+--
+-- Database: xs
+-- Generation Time: 2023-01-25 12:52:13.5430
+-- -------------------------------------------------------------
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+DROP TABLE IF EXISTS `books`;
+CREATE TABLE `books` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `isbn` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `isbn` (`isbn`) USING BTREE,
+  KEY `name` (`name`) USING BTREE,
+  KEY `name_and_isbn` (`name`,`isbn`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `books_users`;
+CREATE TABLE `books_users` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL,
+  `book_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_books_user_id` (`user_id`),
+  KEY `fk_book_id` (`book_id`),
+  CONSTRAINT `fk_book_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
+  CONSTRAINT `fk_books_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `tokens`;
+CREATE TABLE `tokens` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint NOT NULL,
+  `token` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_user_id` (`user_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb3;
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `active` smallint NOT NULL DEFAULT '1',
+  `admin` smallint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`) USING BTREE,
+  KEY `name` (`name`) USING BTREE,
+  KEY `id_and_active` (`id`,`active`) USING BTREE,
+  KEY `email_and_admin` (`email`,`admin`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `books` (`id`, `name`, `isbn`) VALUES
+(1, 'Test book 2', '123-412-12'),
+(3, 'Test book 3', '123-222-111'),
+(4, 'dss', '1234'),
+(5, 'Dancho e qk2', '123-456-789'),
+(7, 'Dancho e qk34', '1'),
+(9, 'ааа', 'а'),
+(10, 'd122', '1dq2');
+
+INSERT INTO `books_users` (`id`, `user_id`, `book_id`) VALUES
+(19, 5, 5),
+(21, 5, 10),
+(22, 10, 10),
+(23, 10, 7);
+
+INSERT INTO `tokens` (`id`, `user_id`, `token`) VALUES
+(34, 10, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiIxMjcuMC4wLjEiLCJpYXQiOjE2NzQ2NDM0MTYsIm5iZiI6MTY3NDY0MzQxNiwiZXhwIjoxNjc0NjcyMjE2LCJjb250ZXh0Ijp7InVzZXIiOnsiaWQiOiIxMCIsImVtYWlsIjoiaGVsbG9AZ21haWwuY29tIiwiYWRtaW4iOiIxIn19fQ.-8zpl6My67SgvHZAmOU3eGilUWhSuCaVhjwsthLqw7-lQ_KIR0i6JR2f047nhYma3vWycOrOIR3yohOS-HkygQ');
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `active`, `admin`) VALUES
+(1, 'Lubomir Stankov', 'lubomir.c.stankov@gmail.com', '1234', 1, 1),
+(5, 'Lubomir Stankov2', 'hello1@gmail.com', '$2y$10$BBNWDR1bZu02a8yn5KhLQuL.FaRow0C2Ii4weUHXN9OQNFB4MeRkG', 1, 1),
+(6, '12345678 hello', 'hello2@gmail.com', '$2y$10$BBNWDR1bZu02a8yn5KhLQuL.FaRow0C2Ii4weUHXN9OQNFB4MeRkG', 1, 0),
+(7, 'Lubo Stankov', 'hello23@gmail.com', '$2y$10$7hAWI8238PBdtZAirqnTEuqhdLprkq6PapG6lVreBeBg2DH9f9Mri', 1, 0),
+(9, 'Lubo Stankov', 'hello234@gmail.com', '$2y$10$52CBvQqWxcSlpU/dqkl.8eOeUmbojKytuyVkMRm3VyQhopgw3MUWC', 1, 0),
+(10, 'Lubomir Stankov', 'hello@gmail.com', '$2y$10$O44TmiUKAKHNgXPnL98YautYEyAlhFEU7AzzPPwxDjcK0b2DNHDDy', 1, 1);
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
