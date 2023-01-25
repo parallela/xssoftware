@@ -17,4 +17,4 @@ npm install
 npm run dev
 ```
 
-Used packages: firebase/JWT - for oauth authentication
+Used packages: firebase/JWT - for bearer token generation
